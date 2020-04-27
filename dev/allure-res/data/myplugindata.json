@@ -1,0 +1,10 @@
+[ {
+  "sounds" : [ "Growl!", "Hiss!" ],
+  "name" : "angryCat"
+}, {
+  "sounds" : [ "Oink!", "Meow!" ],
+  "name" : "hungryCat"
+}, {
+  "sounds" : [ "Bark!", "Woof!", "Moo!" ],
+  "name" : "bigDog"
+} ]

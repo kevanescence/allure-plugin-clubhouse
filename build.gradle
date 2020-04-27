@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'java-library-distribution'
+}
+
+group 'com.dataiku'
+version '0.1'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+apply plugin: 'java-library-distribution'
+
+jar {
+    archiveName = 'plugin.jar'
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compileOnly('io.qameta.allure:allure-plugin-api:2.13.1')
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
+}
+

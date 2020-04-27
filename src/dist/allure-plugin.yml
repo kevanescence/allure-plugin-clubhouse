@@ -1,0 +1,8 @@
+id: clubhouse-plugin
+name: Clubhouse plugin
+description: Interact with the card status on clubhouse.io workspace.
+extensions:
+  - MyPlugin
+jsFiles:
+  - index.js
+

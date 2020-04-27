@@ -1,0 +1,11 @@
+./tmp/allure-html/*
+.gradle
+.idea
+
+allure-report
+build
+tmp
+gradle
+gradlew
+gradlew.bat
+.DS_Store
