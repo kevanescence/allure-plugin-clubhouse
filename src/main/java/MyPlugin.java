@@ -8,18 +8,20 @@ import io.qameta.allure.entity.Status;
 import io.qameta.allure.entity.TestResult;
 import io.restassured.path.json.JsonPath;
 
-import static io.restassured.RestAssured.given;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import static io.restassured.RestAssured.given;
 
 public class MyPlugin implements Aggregator, Widget {
 
@@ -62,7 +64,7 @@ public class MyPlugin implements Aggregator, Widget {
     }
 
     /**
-     * TODO: Handle error case: card not find, page not find.
+     * TODO: Handle error case: card not find, page not find.Œ
      */
     private Map getClubhouseDetail(String storyId, String token) {
         Map<String, String> details = new HashMap<>();
