@@ -1,0 +1,10 @@
+{
+  "46470": {
+    "status": "Completed",
+    "title": "Refactor DynamoDB tests to make them more easily runnable"
+  },
+  "46471": {
+    "status": null,
+    "title": "Jenkins: use DKU deployer v2"
+  }
+}

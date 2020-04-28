@@ -1,9 +1,15 @@
 
 
 var MyTabModel = Backbone.Collection.extend({
-    url: 'data/myplugindata.json'
+    url: 'data/clubhouse_status.json'
 })
 
+var mymodel = new MyTabModel();
+mymodel.fetch();
+
+
+console.log("blallbl")
+console.log(mymodel);
 class MyLayout extends allure.components.AppLayout {
 
     initialize() {
@@ -20,13 +26,26 @@ class MyLayout extends allure.components.AppLayout {
 }
 
 const template = function (data) {
-    html = '<h3 class="pane__section-title">Clubhouse issues</h3>';
+    html = '<h3 class="pane__section-title">Clubhouse issues</h3><table class="table">';
     for (var item of data.model.attributes.links) {
-        console.log(item);
-
-        html += '<a href="' + item.url + '">' + item.name + '</a>';
+        var myString = item.url ;
+        var myRegexp = /.*story\/([0-9]+).*/g;
+        var groups = myRegexp.exec(myString);
+        var clubhouse_id = groups[1];
+        card_info = mymodel.models[0].attributes[clubhouse_id]
+        if (! card_info["status"]) {
+            card_status_html = ""
+        }
+        else {
+            card_status_html = '<span class="label label_status_passed">' +  card_info['status'] + '</span>'
+        }
+        html += '<tr scope="row">' +
+                    '<td><a href="' + item.url + '">CH' + clubhouse_id + '</a></td>' +
+                    '<td>' + card_info["title"] + '</td>' +
+                    '<td>' + card_status_html + '</td>' +
+                '</div>'
     }
-    return html;
+    return html + '</table>';
 }
 
 var MyView = Backbone.Marionette.View.extend({
@@ -49,28 +68,19 @@ var MyView = Backbone.Marionette.View.extend({
 
 class MyLinkWidget extends Backbone.Marionette.View {
 
-    initialize() {
-        console.log("initialization");
-        this.model = new MyTabModel();
-        this.model.fetch();
-        console.log(this.model);
-    }
 
     template(data) {
-            console.log("template of Link widget")
-            console.log(data);
             return template(data);
     }
 
     serializeData() {
-        console.log("Serizliazed")
-        console.log(this.model.models);
         return {
             items: this.model.models
         }
     }
     render() {
-        console.log("toto");
+        console.log(mymodel);
+        console.log(this.model);
         this.$el.html(this.template(this.options));
         return this;
     }

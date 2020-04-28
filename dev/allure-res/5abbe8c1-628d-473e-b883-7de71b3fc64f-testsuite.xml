@@ -1,27 +1,29 @@
-<ns0:test-suite xmlns:ns0="urn:model.allure.qatools.yandex.ru" start="1587983419827" stop="1587983419834">
-  <name>python.test_plugin_allure</name>
+<ns0:test-suite xmlns:ns0="urn:model.allure.qatools.yandex.ru" start="1588077991336" stop="1588077991341">
+  <name>test_plugin_allure</name>
   <labels/>
   <test-cases>
-    <test-case start="1587983419827" status="passed" stop="1587983419829">
+    <test-case start="1588077991336" status="passed" stop="1588077991338">
       <name>TestAllurePlugin.test_with_an_issue</name>
       <attachments/>
       <labels>
-        <label name="issue" value="https://cloubhouse.io/stories/36456"/>
-        <label name="issue" value="https://cloubhouse.io/stories/364555"/>
+        <label name="story" value="My story"/>
+        <label name="feature" value="My Feature"/>
+        <label name="issue" value="https://app.clubhouse.io/dataiku/story/46470"/>
+        <label name="issue" value="https://app.clubhouse.io/dataiku/story/46471"/>
         <label name="severity" value="normal"/>
-        <label name="thread" value="14664-MainThread"/>
+        <label name="thread" value="37681-MainThread"/>
         <label name="host" value="MBP-Dataiku-KRemy.local"/>
         <label name="framework" value="pytest"/>
         <label name="language" value="cpython2"/>
       </labels>
       <steps/>
     </test-case>
-    <test-case start="1587983419834" status="passed" stop="1587983419834">
+    <test-case start="1588077991340" status="passed" stop="1588077991341">
       <name>TestAllurePlugin.test_without_issue</name>
       <attachments/>
       <labels>
         <label name="severity" value="normal"/>
-        <label name="thread" value="14664-MainThread"/>
+        <label name="thread" value="37681-MainThread"/>
         <label name="host" value="MBP-Dataiku-KRemy.local"/>
         <label name="framework" value="pytest"/>
         <label name="language" value="cpython2"/>
