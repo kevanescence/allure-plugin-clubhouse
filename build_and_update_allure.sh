@@ -8,5 +8,11 @@ cp build/distributions/allure-plugin-clubhouse-0.1.zip $DKU_TESTS_DEPS/allure-2.
 
 mkdir -p ./tmp/allure-html/
 $DKU_TESTS_DEPS/allure generate ./dev/allure-res --clean --report-dir  ./tmp/allure-html
-$DKU_TESTS_DEPS/allure open ./tmp/allure-html
+cp ./tmp/widgets.json tmp/allure-html/widgets/mywidget.json
+mkdir -p tmp/allure-html/widgets/allure-plugin-clubhouse/
+#cp ./tmp/widgets.json tmp/allure-html/widgets/allure-plugin-clubhouse/
+
+#cp ./tmp/widgets.json tmp/allure-html/widgets/widgets.json
+
+$DKU_TESTS_DEPS/allure open -p 14600 ./tmp/allure-html
 ## TODO configure the plugin.yml

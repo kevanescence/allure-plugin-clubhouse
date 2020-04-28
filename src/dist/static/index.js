@@ -1,3 +1,5 @@
+
+
 var MyTabModel = Backbone.Collection.extend({
     url: 'data/myplugindata.json'
 })
@@ -18,9 +20,11 @@ class MyLayout extends allure.components.AppLayout {
 }
 
 const template = function (data) {
-    html = '<h3 class="pane__title">My Tab</h3>';
-    for (var item of data.items) {
-        html += '<p>' + item.attributes.name + ' says: ' + item.attributes.sounds + '</p>';
+    html = '<h3 class="pane__section-title">Clubhouse issues</h3>';
+    for (var item of data.model.attributes.links) {
+        console.log(item);
+
+        html += '<a href="' + item.url + '">' + item.name + '</a>';
     }
     return html;
 }
@@ -34,10 +38,47 @@ var MyView = Backbone.Marionette.View.extend({
     }
 })
 
-allure.api.addTab('mytab', {
-    title: 'My Tab', icon: 'fa fa-trophy',
-    route: 'mytab',
-    onEnter: (function () {
-        return new MyLayout()
-    })
-});
+//allure.api.addTab('mytab', {
+//    title: 'My Tab', icon: 'fa fa-trophy',
+//    route: 'mytab',
+//    onEnter: (function () {
+//        return new MyLayout()
+//    })
+//});
+
+
+class MyLinkWidget extends Backbone.Marionette.View {
+
+    initialize() {
+        console.log("initialization");
+        this.model = new MyTabModel();
+        this.model.fetch();
+        console.log(this.model);
+    }
+
+    template(data) {
+            console.log("template of Link widget")
+            console.log(data);
+            return template(data);
+    }
+
+    serializeData() {
+        console.log("Serizliazed")
+        console.log(this.model.models);
+        return {
+            items: this.model.models
+        }
+    }
+    render() {
+        console.log("toto");
+        this.$el.html(this.template(this.options));
+        return this;
+    }
+}
+
+//allure.api.addWidget('mywidget', 'mywidget', new MyWidget());
+
+//allure.api.addWidget('widgets', 'mywidget', MyWidget);
+
+
+allure.api.addTestResultBlock(MyLinkWidget, {position: 'before'});
