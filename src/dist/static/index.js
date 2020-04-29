@@ -23,12 +23,7 @@ class MyLayout extends allure.components.AppLayout {
 }
 
 function retrieveDSS(test_id, ids) {
-    last_status =     {
-                       "47133": {
-                           "status": "Ready for review",
-                           "title": "Refactor DynamoDB tests to make them more easily runnable"
-                       }
-                   }
+    var last_status = {}
     var settings = {
       "url": "http://dku17.dataiku.com:16110/public/api/v1/clubhouse-status-api/ch-status-ep/lookup",
       "method": "POST",
@@ -39,15 +34,28 @@ function retrieveDSS(test_id, ids) {
       "data": ""
     };
 
-    table_of_test = window.document.querySelectorAll("[data-clubhouse-test-uid=\"" + test_id + "\"]")[0];
-
+    table_of_test = window.document.querySelectorAll("table[data-clubhouse-test-uid=\"" + test_id + "\"]")[0];
+    console.log(table_of_test);
     ids.forEach(function(chid, index) {
+        var status_cell = table_of_test.querySelectorAll("[data-clubhouse-last-status-card-id=\"" + chid + '\"]')[0];
+        status_cell.innerHTML='<div class="clubhouse-loader"></div>'
         settings["data"] = JSON.stringify({"data":{"id":chid}})
         Backbone.ajax(settings).done(function(data, error) {
-            last_status=data["results"][0]["data"]["status_name"]
+            last_status=data["results"][0]["data"]["status_name"];
+            var status_cell = table_of_test.querySelectorAll("[data-clubhouse-last-status-card-id=\"" + chid + '\"]')[0];
+            badge_classes = "label"
+            if (last_status == 'Completed') {
+                badge_classes += " label_status_passed"
+            }
+            card_status_run_html = '<span title="Generated on ' + time_info + '" class="' + badge_classes + '">' +
+                                        last_status +
+                                   '</span>'
+
+            status_cell.innerHTML = card_status_run_html;
             if (last_status != null) {
-               status_cell = table_of_test.querySelectorAll("[data-clubhouse-last-status-card-id=\"" + chid + '\"]')[0];
-               status_cell.innerText = last_status;
+               status_cell.title=data["results"][0]["data"]["query_date"];
+               querry_time = window.document.querySelectorAll(".clubhouse-last-fetch[data-clubhouse-test-uid=\"" + test_id + "\"]")[0];
+               querry_time.innerText = 'Fetched from clubhouse on ' +  status_cell.title;
             }
         });
 
@@ -59,8 +67,10 @@ function retrieveDSS(test_id, ids) {
     return
 }
 const template = function (data) {
-    h3_html = '<div class="pane__section"><h3 class="pane__section-title">Related Clubhouse issues details</h3>'
-    console.log(data.model.attributes.uid)
+    h3_html = '<div class="pane__section">' +
+                    '<h3 class="pane__section-title">' +
+                        '<span class="fa fa-flag"></span> Related Clubhouse issues details' +
+                    '</h3>'
 
     html_table = '<table data-clubhouse-test-uid="' + data.model.attributes.uid + '" class="tb-table">' +
          '<thead>'+
@@ -87,7 +97,7 @@ const template = function (data) {
             time_info = card_info["generatedOn"]
             badge_classes = "label";
             console.log(card_info["status"])
-            if (card_info['status'] == 'Complete') {
+            if (card_info['status'] == 'Completed') {
                 badge_classes += " label_status_passed"
             }
             card_status_run_html = '<span title="Generated on ' + time_info + '" class="' + badge_classes + '">' +
@@ -108,7 +118,7 @@ const template = function (data) {
     fetch_info_html = '<button class="clubhouse-plugin-fetch tb-btn tb-btn-primary"' +
                                'onclick="retrieveDSS(\''+ data.model.attributes.uid + '\',' + '[ ' + chids.join(',') + ']);">' +
                             "Fetch last information" +
-                      '</button>';
+                      '</button><span  data-clubhouse-test-uid="' + data.model.attributes.uid + '" class="clubhouse-last-fetch"></span>';
     if (chids.length == 0) {
         return h3_html + 'No attached clubhouse issues on this test'
     }
@@ -126,13 +136,13 @@ var MyView = Backbone.Marionette.View.extend({
     }
 })
 
-//allure.api.addTab('mytab', {
-//    title: 'My Tab', icon: 'fa fa-trophy',
-//    route: 'mytab',
-//    onEnter: (function () {
-//        return new MyLayout()
-//    })
-//});
+allure.api.addTab('mytab', {
+   title: 'Clubhouse', icon: 'fa fa-flag',
+   route: 'mytab',
+   onEnter: (function () {
+       return new MyLayout()
+    })
+});
 
 
 class MyLinkWidget extends Backbone.Marionette.View {
