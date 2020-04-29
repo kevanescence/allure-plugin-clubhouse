@@ -7,6 +7,7 @@ import io.qameta.allure.entity.Link;
 import io.qameta.allure.entity.Status;
 import io.qameta.allure.entity.TestResult;
 import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -24,6 +26,14 @@ import java.util.stream.Stream;
 import static io.restassured.RestAssured.given;
 
 public class MyPlugin implements Aggregator, Widget {
+
+    /**
+     * Information required for sending clubhouse request. Please initiate or update when needed.
+     */
+    private static class ClubhouseData{
+        private static final String baseURI  = "https://api.clubhouse.io/api/v3/stories/";
+        private static final String token = System.getenv("TOKEN");
+    }
 
     @Override
     public void aggregate(final Configuration configuration,
@@ -52,7 +62,7 @@ public class MyPlugin implements Aggregator, Widget {
                     Matcher id = p.matcher(l.getName());
                     while (id.find()) {
                         String s = id.group();
-                        m.put(s, getClubhouseDetail(s, "Replace by your token here"));
+                        m.put(s, getClubhouseDetail(s, ClubhouseData.token));
                     }
                 }
             }
@@ -60,29 +70,28 @@ public class MyPlugin implements Aggregator, Widget {
         return m;
     }
 
-    /**
-     * TODO: Handle error case: card not find, page not find.Œ
-     */
     private Map getClubhouseDetail(String storyId, String token) {
         Map<String, String> details = new HashMap<>();
-        String baseURI =  "https://app.clubhouse.io/backend/api/private/stories/";
-        JsonPath jpCreate =
-                given()
-                        .param("token", token)
-                        .when().get(baseURI + storyId).then().statusCode(200).extract().jsonPath();
-        String title = jpCreate.get("name");
+        Response res = given()
+                .param("token", token)
+                .when().get(ClubhouseData.baseURI + storyId);
+        JsonPath json = res.jsonPath();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String generatedTime = formatter.format(LocalDateTime.now());
-        Boolean completed = jpCreate.get("completed");
-        String status;
-        if(completed) {
-            status = "Complete";
-        } else {
-            status = "WIP";
-        }
-        details.put("title", title);
-        details.put("status", status);
         details.put("generatedOn", generatedTime);
+        int statusCode = res.getStatusCode();
+        if (statusCode == 200) {
+            Optional<String> optionalName = Optional.ofNullable(json.get("name"));
+            String title = optionalName.orElse("Not found");
+            Boolean completed = json.get("completed");
+            String status = (completed == null) ? "Not found" : ((completed) ? "Completed" : "WIP");
+            details.put("title", title);
+            details.put("status", status);
+
+        } else {
+                details.put("title", json.get("message"));
+                details.put("status", String.valueOf(statusCode));
+        }
         return details;
     }
 
@@ -98,5 +107,9 @@ public class MyPlugin implements Aggregator, Widget {
     public String getName() {
         return "mywidget";
     }
+<<<<<<< HEAD
 
 }
+=======
+}
+>>>>>>> master
