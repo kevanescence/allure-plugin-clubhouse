@@ -3,15 +3,25 @@ import io.qameta.allure.Widget;
 import io.qameta.allure.context.JacksonContext;
 import io.qameta.allure.core.Configuration;
 import io.qameta.allure.core.LaunchResults;
+import io.qameta.allure.entity.Link;
 import io.qameta.allure.entity.Status;
 import io.qameta.allure.entity.TestResult;
+import io.restassured.path.json.JsonPath;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import static io.restassured.RestAssured.given;
 
 public class MyPlugin implements Aggregator, Widget {
 
@@ -31,19 +41,49 @@ public class MyPlugin implements Aggregator, Widget {
         }
     }
 
-    private Collection<Map> extractData(final Stream<TestResult> testResults) {
+    private Map extractData(final Stream<TestResult> testResults) {
         //extraction logic
 
-        ArrayList<Map> am = new ArrayList<Map>();
-
+        Map<String, Map<String, String>> m = new HashMap<>();
         testResults.forEach(t -> {
-            Map m = new HashMap<String, String>();
-            m.put("name", t.getFullName());
-            m.put("issues", t.getLinks().toString());
-            am.add(m);
+            if(!t.getLinks().isEmpty()){
+                for (Link l : t.getLinks()) {
+                    Pattern p = Pattern.compile("(?<=/story/)\\d+");
+                    Matcher id = p.matcher(l.getName());
+                    while (id.find()) {
+                        String s = id.group();
+                        m.put(s, getClubhouseDetail(s, "5ea95341-b9e1-4cca-960e-d6f1ba222647"));
+                    }
+                }
+            }
         });
+        return m;
+    }
 
-        return am;
+    /**
+     * TODO: Handle error case: card not find, page not find.Œ
+     */
+    private Map getClubhouseDetail(String storyId, String token) {
+        Map<String, String> details = new HashMap<>();
+        String baseURI =  "https://app.clubhouse.io/backend/api/private/stories/";
+        JsonPath jpCreate =
+                given()
+                        .param("token", token)
+                        .when().get(baseURI + storyId).then().statusCode(200).extract().jsonPath();
+        String title = jpCreate.get("name");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String generatedTime = formatter.format(LocalDateTime.now());
+        Boolean completed = jpCreate.get("completed");
+        String status;
+        if(completed) {
+            status = "Complete";
+        } else {
+            status = "WIP";
+        }
+        details.put("title", title);
+        details.put("status", status);
+        details.put("generatedOn", generatedTime);
+        return details;
     }
 
     @Override

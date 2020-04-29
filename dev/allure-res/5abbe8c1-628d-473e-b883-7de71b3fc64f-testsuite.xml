@@ -8,8 +8,8 @@
       <labels>
         <label name="story" value="My story"/>
         <label name="feature" value="My Feature"/>
-        <label name="issue" value="https://app.clubhouse.io/dataiku/story/46470"/>
-        <label name="issue" value="https://app.clubhouse.io/dataiku/story/46471"/>
+        <label name="issue" value="https://cloubhouse.io/story/29386"/>
+        <label name="issue" value="https://cloubhouse.io/story/9273"/>
         <label name="severity" value="normal"/>
         <label name="thread" value="37681-MainThread"/>
         <label name="host" value="MBP-Dataiku-KRemy.local"/>
