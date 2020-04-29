@@ -49,10 +49,6 @@ public class MyPlugin implements Aggregator, Widget {
                 for (Link l : t.getLinks()) {
                     Pattern p = Pattern.compile("(?<=/story/)\\d+");
                     Matcher id = p.matcher(l.getName());
-                    Map<String, String> details = new HashMap<>();
-                    details.put("status", "Completed");
-                    details.put("title", "Card tile lalala");
-                    details.put("generatedOn", "020-04-21T17:24:23Z");
                     while (id.find()) {
                         String s = id.group();
                         m.put(s, getClubhouseDetail(s, "5ea6fb77-56fe-42a1-8c13-a03ac240dd22"));

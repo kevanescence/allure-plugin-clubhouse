@@ -6,8 +6,8 @@
       <name>TestAllurePlugin.test_with_an_issue</name>
       <attachments/>
       <labels>
-        <label name="issue" value="https://cloubhouse.io/stories/36456"/>
-        <label name="issue" value="https://cloubhouse.io/stories/364555"/>
+        <label name="issue" value="https://cloubhouse.io/story/29386"/>
+        <label name="issue" value="https://cloubhouse.io/story/9273"/>
         <label name="severity" value="normal"/>
         <label name="thread" value="14664-MainThread"/>
         <label name="host" value="MBP-Dataiku-KRemy.local"/>
