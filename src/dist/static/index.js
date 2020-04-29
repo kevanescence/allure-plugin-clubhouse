@@ -26,7 +26,7 @@ class MyLayout extends allure.components.AppLayout {
 }
 
 const template = function (data) {
-    html = '<h3 class="pane__section-title">Clubhouse issues</h3><table class="table">';
+    html = '<h3 class="pane__section-title">Clubhouse issues</h3><table class="tb-table">';
     for (var item of data.model.attributes.links) {
         var myString = item.url ;
         var myRegexp = /.*story\/([0-9]+).*/g;
