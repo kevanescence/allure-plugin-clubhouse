@@ -32,7 +32,7 @@ public class MyPlugin implements Aggregator, Widget {
         final JacksonContext jacksonContext = configuration
                 .requireContext(JacksonContext.class);
         final Path dataFolder = Files.createDirectories(outputDirectory.resolve("data"));
-        final Path dataFile = dataFolder.resolve("myplugindata.json");
+        final Path dataFile = dataFolder.resolve("clubhouse_status.json");
         System.out.println(dataFile);
         final Stream<TestResult> resultsStream = launches.stream()
                 .flatMap(launch -> launch.getAllResults().stream());
@@ -52,7 +52,7 @@ public class MyPlugin implements Aggregator, Widget {
                     Matcher id = p.matcher(l.getName());
                     while (id.find()) {
                         String s = id.group();
-                        m.put(s, getClubhouseDetail(s, "5ea95341-b9e1-4cca-960e-d6f1ba222647"));
+                        m.put(s, getClubhouseDetail(s, "Replace by your token here"));
                     }
                 }
             }

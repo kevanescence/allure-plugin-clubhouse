@@ -11,7 +11,6 @@ $DKU_TESTS_DEPS/allure generate ./dev/allure-res --clean --report-dir  ./tmp/all
 cp ./tmp/widgets.json tmp/allure-html/widgets/mywidget.json
 mkdir -p tmp/allure-html/widgets/allure-plugin-clubhouse/
 #cp ./tmp/widgets.json tmp/allure-html/widgets/allure-plugin-clubhouse/
-cp dev/clubhouse_status.json tmp/allure-html/data/clubhouse_status.json
 #cp ./tmp/widgets.json tmp/allure-html/widgets/widgets.json
 
 $DKU_TESTS_DEPS/allure open -p 14600 ./tmp/allure-html
