@@ -107,9 +107,5 @@ public class MyPlugin implements Aggregator, Widget {
     public String getName() {
         return "mywidget";
     }
-<<<<<<< HEAD
 
 }
-=======
-}
->>>>>>> master
