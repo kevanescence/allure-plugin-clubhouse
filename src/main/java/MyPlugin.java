@@ -42,7 +42,8 @@ public class MyPlugin implements Aggregator, Widget {
         final JacksonContext jacksonContext = configuration
                 .requireContext(JacksonContext.class);
         final Path dataFolder = Files.createDirectories(outputDirectory.resolve("data"));
-        final Path dataFile = dataFolder.resolve("myplugindata.json");
+        final Path dataFile = dataFolder.resolve("clubhouse_status.json");
+        System.out.println(dataFile);
         final Stream<TestResult> resultsStream = launches.stream()
                 .flatMap(launch -> launch.getAllResults().stream());
         try (OutputStream os = Files.newOutputStream(dataFile)) {
@@ -97,7 +98,8 @@ public class MyPlugin implements Aggregator, Widget {
     @Override
     public Object getData(Configuration configuration, List<LaunchResults> launches) {
         Stream<TestResult> filteredResults = launches.stream().flatMap(launch -> launch.getAllResults().stream())
-                .filter(result -> result.getStatus().equals(Status.FAILED));
+                .filter(result -> result.getStatus().equals(Status.PASSED));
+        System.out.println(extractData(filteredResults));
         return extractData(filteredResults);
     }
 
@@ -105,4 +107,5 @@ public class MyPlugin implements Aggregator, Widget {
     public String getName() {
         return "mywidget";
     }
+
 }

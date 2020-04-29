@@ -1,0 +1,171 @@
+/*!
+ * Generated using the Bootstrap Customizer (https://getbootstrap.com/docs/3.4/customize/)
+ *//*!
+ * Bootstrap v3.4.1 (https://getbootstrap.com/)
+ * Copyright 2011-2019 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ *//*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+
+
+ table.tb-table, table.tb-table * {
+     -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+     box-sizing: border-box;
+     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+     font-size: 14px;
+     line-height: 1.42857143;
+     color: #333;
+ }
+.tb-table {
+     width: 100%;
+     max-width: 100%;
+     margin-bottom: 20px;
+     background-color: transparent;
+     border-collapse: collapse;
+     border-spacing: 0;
+ }
+
+.tb-table > thead > tr > th, .tb-table > tbody > tr > th,
+.tb-table > tfoot > tr > th, .tb-table > thead > tr > td,
+.tb-table > tbody > tr > td, .tb-table > tfoot > tr > td {
+     padding: 8px;
+     line-height: 1.42857143;
+     vertical-align: top;
+     border-top: 1px solid #ddd;
+ }
+
+ .tb-table a:hover, .tb-table a:focus {
+     color: #23527c;
+     text-decoration: underline;
+          outline: 0;
+          }
+  .tb-table a {
+                 color: #337ab7;
+
+               text-decoration: none;
+                    background-color: transparent;
+
+}
+
+.tb-btn:not(:disabled):not(.disabled) {
+
+    cursor: pointer;
+
+}
+.tb-btn-primary:hover {
+
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+
+}
+.tb-btn:focus, .tb-btn:hover {
+
+    text-decoration: none;
+
+}
+[type="reset"], [type="submit"], button, html [type="button"] {
+
+    -webkit-appearance: button;
+
+}
+.tb-btn-primary {
+
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+
+}
+.tb-btn {
+
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        border-bottom-color: transparent;
+        border-left-color: transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+
+}
+button.tb-btn{
+
+    text-transform: none;
+
+}
+button.tb-btn{
+
+    overflow: visible;
+
+}
+button.tb-btn{
+
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+
+}
+button.tb-btn {
+
+    border-radius: 0;
+
+}
+*, ::after, ::before {
+
+    box-sizing: border-box;
+
+}
+body {
+
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+
+}
+:root {
+
+    --blue: #007bff;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --pink: #e83e8c;
+    --red: #dc3545;
+    --orange: #fd7e14;
+    --yellow: #ffc107;
+    --green: #28a745;
+    --teal: #20c997;
+    --cyan: #17a2b8;
+    --white: #fff;
+    --gray: #6c757d;
+    --gray-dark: #343a40;
+    --primary: #007bff;
+    --secondary: #6c757d;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --font-family-sans-serif: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    --font-family-monospace: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+
+}
