@@ -145,7 +145,7 @@ allure.api.addTab('mytab', {
 });
 
 
-class MyLinkWidget extends Backbone.Marionette.View {
+class ClubhouseTab extends Backbone.Marionette.View {
 
 
     template(data) {
@@ -166,6 +166,44 @@ class MyLinkWidget extends Backbone.Marionette.View {
 //allure.api.addWidget('mywidget', 'mywidget', new MyWidget());
 
 //allure.api.addWidget('widgets', 'mywidget', MyWidget);
+class ClubhouseOverview extends Backbone.Marionette.View {
+    template(data) {
+            console.log(data);
+            var completed = 0;
+            var uncompleted = 0;
+            for (var item of data.model.attributes.links) {
+                var myString = item.url ;
+                var myRegexp = /.*story\/([0-9]+).*/g;
+                var groups = myRegexp.exec(myString);
+                var clubhouse_id = groups[1];
+                var card_info = mymodel.models[0].attributes[clubhouse_id];
+                if( card_info["status"] == "Completed") {
+                    completed += 1;
+                }
+                else {
+                    uncompleted += 1;
+                }
+            }
 
+            var section = '<div class="pane__section">' +
+                                '<h3 class="pane__section-title">' +
+                                    '<span class="fa fa-flag"></span> Related Clubhouse issues summary' +
+                                '</h3>'
 
-allure.api.addTestResultBlock(MyLinkWidget, {position: 'before'});
+            return section + 'There were for this test (at runtime):<ul><li><span class="label label_status_passed">' + completed + '</span> completed card(s) </li>' +
+                   '<li><span class="label label_status_failed">' + uncompleted + '</span> uncompleted card(s)</li></ul></div>';
+    }
+
+    serializeData() {
+        return {
+            items: this.model.models
+        }
+    }
+    render() {
+        this.$el.html(this.template(this.options));
+        return this;
+    }
+}
+
+allure.api.addTestResultBlock(ClubhouseOverview, {position: 'before'});
+allure.api.addTestResultTab("ch_tab", "Clubhouse details", ClubhouseTab) ;

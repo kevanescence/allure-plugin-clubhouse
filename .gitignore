@@ -1,4 +1,6 @@
 ./tmp/allure-html/*
+dev/__pycache__/
+.cache
 .gradle
 .idea
 
