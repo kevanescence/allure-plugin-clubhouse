@@ -11,28 +11,29 @@ import io.restassured.response.Response;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
 
-public class MyPlugin implements Aggregator {
+public class MyPlugin implements Aggregator, Widget {
 
     /**
      * Information required for sending clubhouse request. Please initiate or update when needed.
      */
     private static class ClubhouseData{
-        private static final String baseURI  = "https://api.clubhouse.io/api/v3/search/stories";
+        private static final String searchURL = "https://api.clubhouse.io/api/v3/search/stories";
+        private static final String baseURI  = "https://api.clubhouse.io";
         private static final String token = System.getenv("TOKEN");
     }
 
@@ -52,74 +53,88 @@ public class MyPlugin implements Aggregator {
         }
     }
 
-    private Map extractData(final Stream<TestResult> testResults) {
+    private Map<String, Map<String, Object>> extractData(final Stream<TestResult> testResults) {
         //extraction logic
-        System.out.println("hihihi");
-        getAutotestedClubhouseCards(ClubhouseData.token);
-        Map<String, Map<String, String>> m = new HashMap<>();
-        /*testResults.forEach(t -> {
+        Map<String, Map<String, Object>> m = new HashMap<>();
+        List<Map<String, Object>> data = getAutotestedClubhouseCards();
+        testResults.forEach(t -> {
             if(!t.getLinks().isEmpty()){
                 for (Link l : t.getLinks()) {
                     Pattern p = Pattern.compile("(?<=/story/)\\d+");
                     Matcher id = p.matcher(l.getName());
                     while (id.find()) {
                         String s = id.group();
-                        m.put(s, getClubhouseDetail(s, ClubhouseData.token));
+                        m.put(s, getClubhouseDetail(s, data));
                     }
                 }
             }
-        });*/
+        });
         return m;
     }
 
-    private List getAutotestedClubhouseCards(String token) {
-        Map<String, String> details = new HashMap<>();
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("page_size", "15");
-        requestBody.put("label", "tests:autotested");
+    private List<Map<String, Object>> getAutotestedClubhouseCards() {
+        String token = ClubhouseData.token;
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("query", "label:'tests:autotested'");
+        requestBody.put("page_size", 25);
         Response res = given()
                 .param("token", token)
+                .contentType("application/json")
                 .body(requestBody)
-                .when().get(ClubhouseData.baseURI);
+                .when().get(ClubhouseData.searchURL);
         JsonPath resJson = res.jsonPath();
-        System.out.println(resJson.getList("data"));
-        return resJson.getList("data");
+        List<Map<String, Object>> cardsData = resJson.get("data");
+        int t = resJson.get("total");
+        if(t >= 25) {
+            double total = t;
+            int pages = (int)Math.ceil(total/25.0);
+            List<Map<String, Object>> data;
+            String next = resJson.get("next");
+            for(int i = 0; i < (pages-1); i++) {
+                String path = ClubhouseData.baseURI + next + "&token=" + token;
+                String p = null;
+                try {
+                    p = java.net.URLDecoder.decode(path, StandardCharsets.UTF_8.name());
+                } catch (UnsupportedEncodingException e) {
+                    // not going to happen - value came from JDK's own StandardCharsets
+                }
+                res = given()
+                        .when().get(p);
+                if(res.getStatusCode() == 200) {
+                    resJson = res.jsonPath();
+                    next = resJson.get("next");
+                    data = resJson.get("data");
+                    cardsData.addAll(data);
+                } else {
+                    System.out.println("Error occurs while requesting: " + res.getBody().prettyPrint());
+                }
+            }
+        }
+        return cardsData;
     }
 
-    /*private Map getClubhouseDetail(String storyId, ArrayList<Map<String, String>> data) {
-        Map<String, String> details = new HashMap<>();
-        // to be deleted
-        Response res = given()
-                .param("token", token)
-                .when().get(ClubhouseData.baseURI + storyId);
-        JsonPath json = res.jsonPath();
-        // to be deleted
-
-        for (Map<String, String> card : data) {
-            String url = card.get("app_url");
-            if
+    private Map<String, Object> getClubhouseDetail(String storyId, List<Map<String, Object>> cardsData) {
+        Map<String, Object> details = new HashMap<>();
+        for (Map<String, Object> card : cardsData) {
+            Object url = card.get("app_url");
+            Pattern p = Pattern.compile("(?<=/story/)\\d+");
+            Matcher id = p.matcher((String)url);
+            while (id.find()) {
+                String s = id.group();
+                if(s.equals(storyId)) {
+                    String title = (String)card.get("name");
+                    Boolean completed = (Boolean) card.get("completed");
+                    String status = (completed == null) ? "Not found" : ((completed == true) ? "Completed" : "WIP");
+                    details.put("title", title);
+                    details.put("status", status);
+                }
+            }
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String generatedTime = formatter.format(LocalDateTime.now());
         details.put("generatedOn", generatedTime);
-
-
-
-
-        if (statusCode == 200) {
-            Optional<String> optionalName = Optional.ofNullable(resJson.get("name"));
-            String title = optionalName.orElse("Not found");
-            Boolean completed = resJson.get("completed");
-            String status = (completed == null) ? "Not found" : ((completed) ? "Completed" : "WIP");
-            details.put("title", title);
-            details.put("status", status);
-
-        } else {
-            details.put("title", resJson.get("message"));
-            details.put("status", String.valueOf(statusCode));
-        }
         return details;
-    }*/
+    }
 
     //@Override
     public Object getData(Configuration configuration, List<LaunchResults> launches) {
@@ -133,5 +148,4 @@ public class MyPlugin implements Aggregator {
     public String getName() {
         return "mywidget";
     }
-
 }
