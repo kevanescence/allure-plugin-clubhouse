@@ -140,7 +140,6 @@ public class MyPlugin implements Aggregator, Widget {
     public Object getData(Configuration configuration, List<LaunchResults> launches) {
         Stream<TestResult> filteredResults = launches.stream().flatMap(launch -> launch.getAllResults().stream())
                 .filter(result -> result.getStatus().equals(Status.PASSED));
-        System.out.println(extractData(filteredResults));
         return extractData(filteredResults);
     }
 
